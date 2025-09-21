@@ -1,19 +1,23 @@
 #!/usr/bin/env python3
 """
-Simple FastAPI server to provide HTTP API for Deep Researcher Agent.
-This bridges the CLI interface with the React frontend.
+Memory-optimized FastAPI server for Deep Researcher Agent.
+Uses lazy loading and minimal memory footprint for Render free tier.
 """
 
+import os
+import gc
 from fastapi import FastAPI, HTTPException, UploadFile, File
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from typing import List, Optional
 import tempfile
-import os
 import json
 from pathlib import Path
 
-from deep_researcher.agent import ResearchAgent
+# Set memory optimization environment variables
+os.environ['TOKENIZERS_PARALLELISM'] = 'false'
+os.environ['OMP_NUM_THREADS'] = '1'
+os.environ['MKL_NUM_THREADS'] = '1'
 
 app = FastAPI(title="Deep Researcher API", version="1.0.0")
 
@@ -30,14 +34,29 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Global agent instance
+# Global agent instance - lazy loaded
 agent = None
 
 def get_agent():
+    """Lazy load the agent to save memory during startup."""
     global agent
     if agent is None:
-        agent = ResearchAgent()
-        agent.__enter__()  # Initialize the agent
+        try:
+            # Import only when needed
+            from deep_researcher.agent import ResearchAgent
+            
+            print("🔄 Initializing Deep Researcher Agent (lazy loading)...")
+            agent = ResearchAgent()
+            agent.__enter__()  # Initialize the agent
+            print("✅ Agent initialized successfully")
+            
+            # Force garbage collection after initialization
+            gc.collect()
+            
+        except Exception as e:
+            print(f"❌ Error initializing agent: {e}")
+            raise HTTPException(status_code=500, detail=f"Failed to initialize agent: {str(e)}")
+    
     return agent
 
 class ResearchRequest(BaseModel):
