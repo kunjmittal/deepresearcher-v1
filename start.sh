@@ -20,14 +20,10 @@ echo "🔄 Skipping model download - using lazy loading to save memory..."
 echo "🚀 Starting Deep Researcher API with ultra-minimal memory usage..."
 echo "📡 Server will be available on port $PORT"
 
-# Use gunicorn for better memory management
-gunicorn api_server:app \
-    --bind 0.0.0.0:$PORT \
+# Use uvicorn directly for simplicity and reliability
+uvicorn api_server:app \
+    --host 0.0.0.0 \
+    --port $PORT \
     --workers 1 \
-    --worker-class uvicorn.workers.UvicornWorker \
-    --worker-connections 1 \
-    --max-requests 100 \
-    --max-requests-jitter 10 \
-    --timeout 30 \
-    --keep-alive 2 \
-    --preload-app
+    --loop asyncio \
+    --http httptools
