@@ -20,7 +20,11 @@ app = FastAPI(title="Deep Researcher API", version="1.0.0")
 # Enable CORS for frontend
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000"],  # React dev server
+    allow_origins=[
+        "http://localhost:3000",  # React dev server
+        "https://deep-researcher-frontend.onrender.com",  # Production frontend
+        "https://*.onrender.com",  # Any Render subdomain
+    ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
