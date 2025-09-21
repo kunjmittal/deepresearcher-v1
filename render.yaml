@@ -1,0 +1,22 @@
+services:
+  - type: web
+    name: deep-researcher-backend
+    env: python
+    plan: free
+    buildCommand: pip install -r requirements-prod.txt && python download_models.py
+    startCommand: chmod +x start.sh && ./start.sh
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.0
+      - key: DATA_DIR
+        value: /opt/render/project/src/data
+      - key: EMBEDDING_MODEL
+        value: all-MiniLM-L6-v2
+      - key: SIMILARITY_THRESHOLD
+        value: 0.3
+      - key: CHUNK_SIZE
+        value: 512
+      - key: BATCH_SIZE
+        value: 32
+      - key: MAX_MEMORY_USAGE_GB
+        value: 2.0
