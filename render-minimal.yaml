@@ -1,0 +1,30 @@
+services:
+  - type: web
+    name: deep-researcher-backend
+    env: python
+    plan: free
+    buildCommand: pip install -r requirements-minimal.txt
+    startCommand: chmod +x start_minimal.sh && ./start_minimal.sh
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.0
+      - key: DATA_DIR
+        value: /opt/render/project/src/data
+      - key: EMBEDDING_MODEL
+        value: all-MiniLM-L6-v2
+      - key: SIMILARITY_THRESHOLD
+        value: 0.3
+      - key: CHUNK_SIZE
+        value: 64
+      - key: BATCH_SIZE
+        value: 4
+      - key: MAX_MEMORY_USAGE_GB
+        value: 0.2
+      - key: OMP_NUM_THREADS
+        value: 1
+      - key: MKL_NUM_THREADS
+        value: 1
+      - key: TOKENIZERS_PARALLELISM
+        value: false
+      - key: PYTORCH_CUDA_ALLOC_CONF
+        value: max_split_size_mb:32
