@@ -15,8 +15,12 @@ services:
       - key: SIMILARITY_THRESHOLD
         value: 0.3
       - key: CHUNK_SIZE
-        value: 512
+        value: 256
       - key: BATCH_SIZE
-        value: 32
+        value: 16
       - key: MAX_MEMORY_USAGE_GB
-        value: 2.0
+        value: 0.5
+      - key: OMP_NUM_THREADS
+        value: 1
+      - key: MKL_NUM_THREADS
+        value: 1

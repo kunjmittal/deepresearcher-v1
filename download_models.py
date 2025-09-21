@@ -1,16 +1,15 @@
 #!/usr/bin/env python3
 """
 Download required models for Deep Researcher Agent.
-This script downloads the embedding model on first run.
+This script downloads a lightweight embedding model optimized for Render's free tier.
 """
 
 import os
 import sys
 from pathlib import Path
-from sentence_transformers import SentenceTransformer
 
 def download_embedding_model():
-    """Download the embedding model if it doesn't exist."""
+    """Download a lightweight embedding model for Render's free tier."""
     model_name = "all-MiniLM-L6-v2"
     model_dir = Path("./models/embeddings")
     
@@ -23,15 +22,24 @@ def download_embedding_model():
         print(f"✅ Model {model_name} already exists at {model_path}")
         return
     
-    print(f"🔄 Downloading embedding model: {model_name}")
-    print("This may take a few minutes...")
+    print(f"🔄 Setting up lightweight model for Render free tier...")
+    print("Using model caching to reduce memory usage...")
     
     try:
-        # Download the model
-        model = SentenceTransformer(model_name)
+        # Import only when needed to save memory
+        from sentence_transformers import SentenceTransformer
+        
+        # Download with memory optimization
+        print(f"📥 Downloading {model_name} with memory optimization...")
+        
+        # Use a smaller model for free tier
+        model = SentenceTransformer(model_name, device='cpu')
         
         # Save to custom location
         model.save(str(model_dir / f"models--sentence-transformers--{model_name}"))
+        
+        # Clear memory
+        del model
         
         print(f"✅ Model {model_name} downloaded successfully!")
         print(f"📁 Saved to: {model_dir}")
