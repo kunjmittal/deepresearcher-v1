@@ -30,7 +30,7 @@ class RetrievalConfig:
     """Configuration for document retrieval."""
     strategy: RetrievalStrategy = RetrievalStrategy.HYBRID
     max_results: int = 10
-    similarity_threshold: float = 0.7
+    similarity_threshold: float = 0.3
     keyword_weight: float = 0.3
     semantic_weight: float = 0.7
     diversity_factor: float = 0.1

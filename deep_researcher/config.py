@@ -27,7 +27,7 @@ class Config:
     
     # Retrieval settings
     default_k: int = 10
-    similarity_threshold: float = 0.7
+    similarity_threshold: float = 0.3
     max_reasoning_steps: int = 5
     
     # Performance settings
